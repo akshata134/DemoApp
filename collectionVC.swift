@@ -10,11 +10,13 @@ import UIKit
 import Foundation
 import Alamofire
 import SwiftyJSON
+import AlamofireImage
 
 class collectionVC: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
     var nameArray = [String]()
-  var authorarray = [String]()
- var descriptionarray = [String]()
+    var authorarray = [String]()
+    var descriptionarray = [String]()
+    var imagearray = [String]()
     var publishedAtarray = [String]()
     var urlarray = [String]()
     var authors = [String]()
@@ -38,7 +40,8 @@ class collectionVC: UIViewController,UICollectionViewDelegate,UICollectionViewDa
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
        let cell=collectionView.dequeueReusableCell(withReuseIdentifier: "collectionid", for:indexPath ) as! customCollectionviewcell
-        
+          let url=NSURL(string:self.imagearray[indexPath.row])
+        cell.imagedata.af_setImage(withURL: url! as URL, placeholderImage:UIImage(named:"images"), filter: nil,imageTransition: .crossDissolve(0.5), runImageTransitionIfCached: true, completion:nil )
         // Use the outlet in our custom class to get a reference to the UILabel in the cell
         cell.lbloutlet.text = self.nameArray[indexPath.row]
      
@@ -105,7 +108,14 @@ class collectionVC: UIViewController,UICollectionViewDelegate,UICollectionViewDa
                             let title = (data as AnyObject).value(forKey: "title") as? String
                             self.nameArray.append(title!)
                             print(self.nameArray)
-                           
+                            
+                           let image = (data as AnyObject).value(forKey: "urlToImage") as? String
+                            if image == nil {
+                             self.imagearray.append("")
+                            }
+                            else {
+                            self.imagearray.append(image!)
+                                
                             let image = (data as AnyObject).value(forKey: "urlToImage") as? String
                             print(image as Any)
                            
